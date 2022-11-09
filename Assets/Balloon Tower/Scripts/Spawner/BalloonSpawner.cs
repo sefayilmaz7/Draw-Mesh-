@@ -22,9 +22,9 @@ public class BalloonSpawner : MonoBehaviour
 
     private void SetJointConfig(SpringJoint joint)
     {
-        joint.maxDistance = 5;
+        joint.maxDistance = 2;
         joint.connectedBody = connectedBody;
-        joint.spring = 5;
+        joint.spring = 0;
     }
 
     private void Start()
