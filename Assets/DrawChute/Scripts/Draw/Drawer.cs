@@ -1,4 +1,3 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -9,9 +8,8 @@ public class Drawer : MonoBehaviour
     private List<Vector3> spawnPoints = new List<Vector3>();
 
     [SerializeField] private GameObject meshPartPrefab;
-    [SerializeField] private Transform createPoint;
 
-    public void SendRaycast()
+    private void SendRaycast()
     {
         if (Input.GetMouseButton(0))
         {
@@ -35,14 +33,16 @@ public class Drawer : MonoBehaviour
         spawnPoints.Clear();
     }
 
+    // I could use LineRenderer's BakeMesh() method but as i saw on reference video you made it this way
     private void GenerateObject()
     {
-        GameObject createdMesh = new GameObject();
-        createdMesh.transform.position = createPoint.position;
+        GameObject createdMesh = new GameObject("Mesh");
+        createdMesh.transform.position = Vector3.zero;
         foreach (var spawnPoint in spawnPoints)
         {
             var meshPart = Instantiate(meshPartPrefab, spawnPoint, Quaternion.identity);
             meshPart.transform.parent = createdMesh.transform;
+            meshPart.transform.position += new Vector3(0, 2, 3);
         }
 
         createdMesh.AddComponent<Rigidbody>();

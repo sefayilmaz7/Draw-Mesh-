@@ -1,18 +1,30 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
+using DG.Tweening;
 
 public class DrawArea : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] private GameObject drawAreaPanel;
+
+    private Vector3 defaultScale;
+
+    private void Awake()
     {
-        
+        defaultScale = drawAreaPanel.transform.localScale;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void InitArea()
     {
-        
+        drawAreaPanel.transform.DOScale(defaultScale, 0.8f).SetEase(Ease.InOutCirc).From(0);
+    }
+
+    private void OnEnable()
+    {
+        GameManager.GameStarted += InitArea;
+    }
+
+    private void OnDisable()
+    {
+        GameManager.GameStarted -= InitArea;
     }
 }
