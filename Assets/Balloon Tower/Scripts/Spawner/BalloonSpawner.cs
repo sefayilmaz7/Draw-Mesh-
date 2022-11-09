@@ -13,7 +13,8 @@ public class BalloonSpawner : MonoBehaviour
 
     private void SpawnAndInitialize()
     {
-        var spawnedBalloon = Instantiate(balloon, Random.insideUnitCircle, Quaternion.identity);
+        var spawnedBalloon = ObjectPool.Instance.GetPooledObject();
+        spawnedBalloon.transform.position = Random.insideUnitCircle;
         spawnedBalloon.GetComponent<MeshRenderer>().material.color = balloonColors[Random.Range(0, balloonColors.Length -1)];
         var joint = spawnedBalloon.AddComponent<SpringJoint>();
         SetJointConfig(joint);
@@ -30,14 +31,5 @@ public class BalloonSpawner : MonoBehaviour
     private void Start()
     {
         InvokeRepeating("SpawnAndInitialize" , 0.2f, 2);
-    }
-
-    public void BUTTON_CALLBACK_RESET()
-    {
-        var allBalloons = FindObjectsOfType<Balloon>();
-        foreach (var balloon in allBalloons)
-        {
-            Destroy(balloon.gameObject);
-        }
     }
 }
