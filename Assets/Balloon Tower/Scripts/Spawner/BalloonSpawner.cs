@@ -9,23 +9,20 @@ public class BalloonSpawner : MonoBehaviour
     [SerializeField] private Color[] balloonColors;
     [SerializeField] private Rigidbody connectedBody;
 
-    public static event UnityAction UpdateBoundaries;
-
     private void SpawnAndInitialize()
     {
         var spawnedBalloon = ObjectPool.Instance.GetPooledObject();
-        spawnedBalloon.transform.position = Random.insideUnitCircle;
+        spawnedBalloon.transform.position = Vector3.zero;
         spawnedBalloon.GetComponent<MeshRenderer>().material.color = balloonColors[Random.Range(0, balloonColors.Length -1)];
         var joint = spawnedBalloon.AddComponent<SpringJoint>();
         SetJointConfig(joint);
-        UpdateBoundaries?.Invoke();
     }
 
     private void SetJointConfig(SpringJoint joint)
     {
-        joint.maxDistance = 2;
         joint.connectedBody = connectedBody;
-        joint.spring = 0;
+        // We can decrease the max distance for lower radius of balloons
+        joint.maxDistance = 2;
     }
 
     private void Start()

@@ -3,20 +3,14 @@ using DG.Tweening;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
+[RequireComponent(typeof(Rigidbody))]
 public class Balloon : MonoBehaviour
 {
     [SerializeField] private Rigidbody rb;
     private Vector3 spawnPos => Vector3.zero;
 
     private bool connected = false;
-
-    #region Clamp Values
-
-    private float minX = -2.5f;
-    private float maxX = 2.5f;
-
-    #endregion
-
+    
     private void Inflate()
     {
         transform.DOScale(1, 0.7f).From(0).OnComplete(() =>
@@ -28,6 +22,9 @@ public class Balloon : MonoBehaviour
 
     private void PushBalloon()
     {
+        var randNumber = Random.Range(0, 100);
+        Vector3 force = new Vector3(Random.Range(0.05f, 0.1f), Random.Range(0.5f,1f) ,randNumber > 50 ? -1 : 1);
+        rb.velocity = force;
         rb.AddForce(Vector3.up * 100 , ForceMode.Force);
     }
 
@@ -44,38 +41,26 @@ public class Balloon : MonoBehaviour
 
     private void Update()
     {
-        ClampPositions();
+        KeepPushing();
         
         if (connected)
             ConnectRope();
     }
-    
+
+    private void KeepPushing()
+    {
+        if (rb.position.y < 1.5)
+        {
+            rb.AddForce(Vector3.up * 3, ForceMode.Force);
+        }
+        else
+        {
+            rb.AddForce(-1 * Vector3.up, ForceMode.Force);
+        }
+    }
+
     private void Start()
     {
         Inflate();
-    }
-
-    private void ClampPositions()
-    {
-        Vector3 tmpPos = transform.position;
-        tmpPos.y = Mathf.Clamp(tmpPos.y, 1, Mathf.Infinity);
-        tmpPos.x = Mathf.Clamp(tmpPos.x, minX, maxX);
-        transform.position = tmpPos;
-    }
-
-    private void OnEnable()
-    {
-        BalloonSpawner.UpdateBoundaries += UpdateBoundariesCallBack;
-    }
-
-    private void OnDisable()
-    {
-        BalloonSpawner.UpdateBoundaries -= UpdateBoundariesCallBack;
-    }
-
-    private void UpdateBoundariesCallBack()
-    {
-        minX -= 0.02f;
-        maxX += 0.02f;
     }
 }
