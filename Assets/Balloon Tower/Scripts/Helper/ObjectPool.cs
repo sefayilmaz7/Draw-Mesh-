@@ -25,12 +25,12 @@ public class ObjectPool : MonoBehaviour
     private void Start()
     {
         pooledObjects = new List<GameObject>();
-        GameObject tmp;
+        GameObject poolItem;
         for (int i = 0; i < poolAmount; i++)
         {
-            tmp = Instantiate(objectToPool);
-            tmp.SetActive(false);
-            pooledObjects.Add(tmp);
+            poolItem = Instantiate(objectToPool);
+            poolItem.SetActive(false);
+            pooledObjects.Add(poolItem);
         }
     }
 

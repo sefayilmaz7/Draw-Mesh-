@@ -12,6 +12,8 @@ public class BalloonSpawner : MonoBehaviour
     private void SpawnAndInitialize()
     {
         var spawnedBalloon = ObjectPool.Instance.GetPooledObject();
+        if(!spawnedBalloon)
+            return;
         spawnedBalloon.transform.position = Vector3.zero;
         spawnedBalloon.GetComponent<MeshRenderer>().material.color = balloonColors[Random.Range(0, balloonColors.Length -1)];
         var joint = spawnedBalloon.AddComponent<SpringJoint>();
@@ -27,6 +29,6 @@ public class BalloonSpawner : MonoBehaviour
 
     private void Start()
     {
-        InvokeRepeating("SpawnAndInitialize" , 0.2f, 2);
+        InvokeRepeating(nameof(SpawnAndInitialize) , 0.2f, 2);
     }
 }

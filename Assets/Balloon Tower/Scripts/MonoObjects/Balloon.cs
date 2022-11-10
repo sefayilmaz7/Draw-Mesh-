@@ -7,15 +7,15 @@ using Random = UnityEngine.Random;
 public class Balloon : MonoBehaviour
 {
     [SerializeField] private Rigidbody rb;
-    private Vector3 spawnPos => Vector3.zero;
+    private Vector3 SpawnPos => Vector3.zero;
 
-    private bool connected = false;
-    
+    private bool _connected = false;
+
     private void Inflate()
     {
         transform.DOScale(1, 0.7f).From(0).OnComplete(() =>
         {
-            connected = true;
+            _connected = true;
             PushBalloon();
         });
     }
@@ -23,9 +23,9 @@ public class Balloon : MonoBehaviour
     private void PushBalloon()
     {
         var randNumber = Random.Range(0, 100);
-        Vector3 force = new Vector3(Random.Range(0.05f, 0.1f), Random.Range(0.5f,1f) ,randNumber > 50 ? -1 : 1);
+        Vector3 force = new Vector3(Random.Range(0.05f, 0.1f), Random.Range(0.5f, 1f), randNumber > 50 ? -1 : 1);
         rb.velocity = force;
-        rb.AddForce(Vector3.up * 100 , ForceMode.Force);
+        rb.AddForce(Vector3.up * 100, ForceMode.Force);
     }
 
     private void ConnectRope()
@@ -35,28 +35,27 @@ public class Balloon : MonoBehaviour
             return;
 
         lineRenderer.positionCount = 2;
-        lineRenderer.SetPosition(0, spawnPos);
-        lineRenderer.SetPosition(1, transform.position - new Vector3(0,0.5f,0));
+        lineRenderer.SetPosition(0, SpawnPos);
+        lineRenderer.SetPosition(1, transform.position - new Vector3(0, 0.5f, 0));
     }
 
     private void Update()
     {
         KeepPushing();
-        
-        if (connected)
+
+        if (_connected)
             ConnectRope();
     }
 
     private void KeepPushing()
     {
-        if (rb.position.y < 1.5)
+        if (rb.position.y < 2)
         {
             rb.AddForce(Vector3.up * 3, ForceMode.Force);
+            return;
         }
-        else
-        {
-            rb.AddForce(-1 * Vector3.up, ForceMode.Force);
-        }
+
+        rb.AddForce(Vector3.down, ForceMode.Force);
     }
 
     private void Start()
